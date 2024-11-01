@@ -22,14 +22,19 @@ This project uses the following technologies and libraries:
 To run this project on your local machine, follow these steps:
 
 1. Clone this repository:
-   ```bash
+```bash
    git clone https://github.com/username/rocket-landing.git
-   cd rocket-landing```
+   cd rocket-landing
+```
 
 2. Install the required dependencies:
-```npm install```
+```bash
+   npm install
+```
 3. Start the application:
-```npx expo start```
+```bash
+   npx expo start
+```
 
 Usage
 When the app opens, press the "Launch Rocket" button to start the rocket. Tap on the screen to push the rocket upwards, and it will fall when released. The goal is to make the rocket land without crashing into the ramp. When the game is over, you can press the "Reset Rocket" button to restart the game.
