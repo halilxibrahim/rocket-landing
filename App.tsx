@@ -12,27 +12,27 @@ import Animated, {
 } from 'react-native-reanimated';
 import { LucideRocket } from 'lucide-react-native';
 import './global.css';
+import { Linking } from 'react-native';
 
 export default function RocketApp() {
   const rocketSize = 100;
   const screenHeight = Dimensions.get('window').height;
-  const launchHeight = screenHeight / 100; // Roketin havada kalacağı yükseklik
-  const startY = -rocketSize; // Roketin başlangıçta üstte yer alması
-  const rocketY = useSharedValue(startY); // Roket başlangıçta yukarıda
-  const thrustOpacity = useSharedValue(0); // Gaz efekti için şeffaflık
-  const [isLaunched, setIsLaunched] = useState(false); // Roket kalktı mı durumu
-  const [isGameOver, setIsGameOver] = useState(false); // Oyun durumu
+  const launchHeight = screenHeight / 100; 
+  const startY = -rocketSize; 
+  const rocketY = useSharedValue(startY); 
+  const thrustOpacity = useSharedValue(0); 
+  const [isLaunched, setIsLaunched] = useState(false); 
+  const [isGameOver, setIsGameOver] = useState(false); 
 
   useEffect(() => {
     if (isLaunched) {
-      launchRocket(); // Roketin düşüş animasyonunu başlat
+      launchRocket(); 
     }
   }, [isLaunched]);
 
   const launchRocket = () => {
-    // Yavaşça düşme animasyonu
     rocketY.value = withTiming(screenHeight - rocketSize, {
-      duration: 12000, // Düşme süresi
+      duration: 12000, 
       easing: Easing.out(Easing.exp),
     });
   };
@@ -40,11 +40,9 @@ export default function RocketApp() {
   useAnimatedReaction(
     () => rocketY.value,
     (value) => {
-      // Roketin rampaya çarptığını kontrol et
-      if (value >= screenHeight - 340 - rocketSize && !isGameOver) { // 70 rampanın yüksekliği
-        runOnJS(setIsGameOver)(true); // Oyun sona erdi
+      if (value >= screenHeight - 450 - rocketSize && !isGameOver) {
+        runOnJS(setIsGameOver)(true); 
       }
-
     }
   );
 
@@ -55,7 +53,6 @@ export default function RocketApp() {
 
   const handlePressOut = () => {
     thrustOpacity.value = withTiming(0, { duration: 500 });
-    // Düşerken roketin altına daha hızlı geri dönmesini sağlayan animasyon
     rocketY.value = withTiming(screenHeight - rocketSize, { duration: 4000 });
   };
 
@@ -80,15 +77,25 @@ export default function RocketApp() {
 
       {!isLaunched ? (
         <View className="flex-1 items-center justify-center">
-          <Text className="text-2xl font-bold text-white">
-            Rocket Animation
+          <Text className="text-2xl mb-10 font-bold text-white">
+            Rocket Landing Game
           </Text>
           <TouchableOpacity
             className="bg-blue-500 px-6 py-3 m-2 rounded-full"
-            onPress={() => setIsLaunched(true)} // Roketi başlat
+            onPress={() => setIsLaunched(true)}
           >
-            <Text className="text-white font-bold">Launch Rocket</Text>
+            <Text className="text-white font-bold">Launch Game</Text>
           </TouchableOpacity>
+          <Text className="text-white text-xl text-center mt-10 mx-10">
+            In this game, you control a rocket that launches into the air. Press and hold the screen to give the rocket thrust and keep it in the air. Release to let it fall back down. Your goal is to land the rocket safely on the ramp without crashing. If the rocket hits the ramp too hard, the game is over. Try to launch it with the perfect timing for a successful landing!
+          </Text>
+          <TouchableOpacity onPress={() => Linking.openURL('https://www.linkedin.com/in/halilxibrahim/')}>
+            <Text className="text-white text-center mt-14">
+              Developed by Halil İbrahim Kamacı
+            </Text>
+          </TouchableOpacity>
+
+
         </View>
       ) : (
         <View className="flex-1 bg-gray-900 items-center justify-center">
@@ -116,10 +123,9 @@ export default function RocketApp() {
             </Animated.View>
           </Pressable>
 
-          {/* Landing Ramp Line */}
           <View style={{
             position: 'absolute',
-            bottom: 70, // Adjust height as needed
+            bottom: 80,
             width: '100%',
             height: 5,
             backgroundColor: 'white',
@@ -127,14 +133,13 @@ export default function RocketApp() {
 
           <TouchableOpacity
             className="absolute bottom-10 bg-green-500 px-6 py-3 rounded-full"
-            onPress={resetGame} // Yeniden başlat
+            onPress={resetGame}
           >
-            <Text className="text-white font-bold">Reset Rocket</Text>
+            <Text className="text-white font-bold">Reset Game</Text>
           </TouchableOpacity>
         </View>
       )}
 
-      {/* Oyun Bitti Modal */}
       <Modal
         visible={isGameOver}
         transparent={true}
@@ -142,13 +147,13 @@ export default function RocketApp() {
       >
         <View className="flex-1 items-center justify-center bg-black bg-opacity-75">
           <View className="bg-white p-5 rounded-lg">
-            <Text className="text-xl font-bold text-center">Roket Düştü!</Text>
-            <Text className="text-center">Oyunu kaybettin. Yeniden oyna!</Text>
+            <Text className="text-xl font-bold text-center">Rocket Crashed!</Text>
+            <Text className="text-center">You lost the game. Play again!</Text>
             <TouchableOpacity
               className="bg-blue-500 px-6 py-3 rounded-full mt-4"
               onPress={resetGame}
             >
-              <Text className="text-white ml-10 font-bold">Yeniden Oyna</Text>
+              <Text className="text-white ml-10 font-bold">Play Again</Text>
             </TouchableOpacity>
           </View>
         </View>
